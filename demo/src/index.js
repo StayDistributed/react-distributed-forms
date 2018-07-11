@@ -114,7 +114,12 @@ class Demo extends Component {
               </div>
               <div>
                 <label>
-                  Country <Input type="text" name="country" />
+                  Country <Input type="text" name="country" list="countries" />
+                  <datalist id="countries">
+                    <option value="Italy" />
+                    <option value="European Country" />
+                    <option value="Other" />
+                  </datalist>
                 </label>
               </div>
             </fieldset>
@@ -134,11 +139,16 @@ class Demo extends Component {
                 <label>
                   Programming languages
                   <Select name="programming-languages" multiple>
-                    <option>Java</option>
-                    <option>C</option>
-                    <option>Javascript</option>
-                    <option>Ruby</option>
-                    <option>Obj-C</option>
+                    <optgroup label="Compiled">
+                      <option>Java</option>
+                      <option>C</option>
+                      <option>Obj-C</option>
+                    </optgroup>
+                    <optgroup label="Interpreted">
+                      <option>Javascript</option>
+                      <option>Ruby</option>
+                      <option>PHP</option>
+                    </optgroup>
                   </Select>
                 </label>
               </div>
