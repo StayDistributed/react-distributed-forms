@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 
-import { Form, Input, Select, Button } from "../../src";
+import { Form, Input, Select, Textarea, Button } from "../../src";
 
 class Demo extends Component {
   state = {
@@ -132,8 +132,30 @@ class Demo extends Component {
               </div>
               <div>
                 <label>
+                  Programming languages
+                  <Select name="programming-languages" multiple>
+                    <option>Java</option>
+                    <option>C</option>
+                    <option>Javascript</option>
+                    <option>Ruby</option>
+                    <option>Obj-C</option>
+                  </Select>
+                </label>
+              </div>
+              <div>
+                <label>
                   Company Name
                   <Input type="text" name="company" />
+                </label>
+              </div>
+              <div>
+                <label>
+                  Best Job Experience (short story)
+                  <Textarea
+                    name="experience"
+                    value={`Best Job experience when I worked for
+and I build`}
+                  />
                 </label>
               </div>
             </fieldset>

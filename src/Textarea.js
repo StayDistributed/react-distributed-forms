@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
 
-class Select extends Component {
-  state = {};
+class Textarea extends Component {
+  state = {
+    didchanged: false
+  };
 
   static getDerivedStateFromProps(props, state) {
     if (props.value !== state.value) {
@@ -15,10 +17,11 @@ class Select extends Component {
     return null;
   }
 
-  getValue = e =>
-    this.props.multiple
-      ? [].slice.call(e.target.selectedOptions).map(o => o.value)
-      : e.target.value;
+  didChanged() {
+    return this.state.didchanged;
+  }
+
+  getValue = e => e.target.value;
 
   getProps = () => {
     const { name, context } = this.props;
@@ -29,22 +32,38 @@ class Select extends Component {
 
       onChange: e => {
         const value = this.getValue(e);
-        context.onFieldChange(name, value);
-        context.onFieldDidChanged(name, value);
+        this.setState(
+          {
+            didchanged: true
+          },
+          () => {
+            context.onFieldChange(name, value);
+          }
+        );
       },
       onFocus: e => {
         const value = this.getValue(e);
-        context.onFieldFocus(name, value);
+        this.setState(
+          {
+            didchanged: false
+          },
+          () => {
+            context.onFieldFocus(name, value);
+          }
+        );
       },
       onBlur: e => {
         const value = this.getValue(e);
         context.onFieldBlur(name, value);
+        if (this.didChanged()) {
+          context.onFieldDidChanged(name, value);
+        }
       }
     };
   };
 
   render() {
-    return <select {...this.props} {...this.getProps()} context={null} />;
+    return <textarea {...this.props} {...this.getProps()} />;
   }
 }
 
@@ -53,7 +72,7 @@ export default class extends Component {
     return (
       <Field
         render={contextValue => (
-          <Select context={contextValue} {...this.props} />
+          <Textarea context={contextValue} {...this.props} />
         )}
       />
     );
@@ -62,7 +81,6 @@ export default class extends Component {
   static propTypes = {
     name: PropTypes.string,
     value: PropTypes.oneOfType([
-      PropTypes.array,
       PropTypes.string,
       PropTypes.number,
       PropTypes.bool

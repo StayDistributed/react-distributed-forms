@@ -3,6 +3,7 @@ import React from "react";
 import { create } from "react-test-renderer";
 
 import { Form, Input, Select } from "src/";
+import { Textarea } from "../src";
 
 describe("Component", () => {
   let tree;
@@ -58,6 +59,16 @@ describe("Component", () => {
             <div>
               <label>
                 Company <Input type="text" name="company" />
+              </label>
+            </div>
+          </fieldset>
+        </Form>
+        <Form>
+          <fieldset>
+            <legend>Job</legend>
+            <div>
+              <label>
+                Bio <Textarea name="bio" />
               </label>
             </div>
           </fieldset>
