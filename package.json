@@ -1,6 +1,6 @@
 {
   "name": "react-distributed-forms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "react-distributed-forms React component",
   "main": "lib/index.js",
   "module": "es/index.js",
