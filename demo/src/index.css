@@ -1,0 +1,16 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+fieldset {
+  margin: 20px;
+}
+
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+  display: block;
+}

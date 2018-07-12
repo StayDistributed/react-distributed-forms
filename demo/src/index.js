@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 
 import { Form, Input, Select, Textarea, Button } from "../../src";
+import "./index.css";
 
 class Demo extends Component {
   state = {
@@ -18,15 +19,11 @@ class Demo extends Component {
   };
 
   onChange = (name, value) => {
-    this.setState(({ all, job }) => ({
+    this.setState(({ all }) => ({
       all: {
         ...all,
         gender: "Male",
         [name]: value
-      },
-      job: {
-        ...job,
-        developer: false
       }
     }));
   };
