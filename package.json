@@ -36,6 +36,8 @@
   "license": "MIT",
   "repository": "https://github.com/StayDistributed/react-distributed-forms",
   "keywords": [
-    "react-forms react-context-forms"
+    "react",
+    "context",
+    "forms"
   ]
 }
