@@ -43,13 +43,13 @@ Triggered every time a field lose focused
 
 ### onFieldDidChanged(name, value)
 
-Triggered every time a field has changed its value and user has finished editing it, for example when a <select> changes value or an input type="text" lose focus after editing
+Triggered every time a field has changed its value and user has finished editing it, for example when a Select changes value or an Input type="text" lose focus after editing
 
 - you can use it to call your backend automatically on form editing.
 
 ### onSubmit(name, value)
 
-Triggered every time a <Button> inside a from is clicked
+Triggered every time a Button inside a from is clicked
 
 ## Create a basic form
 
