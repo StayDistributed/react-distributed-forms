@@ -13,6 +13,8 @@
 
 Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can also build awesome _nested forms_ (see below).
 
+[Live Demo](https://codesandbox.io/s/5k30y1x05k)
+
 ## Installation
 
 Add react-distributed-forms to your project.
