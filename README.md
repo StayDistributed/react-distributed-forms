@@ -13,7 +13,12 @@
 
 Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can also build awesome _nested forms_ (see below).
 
-[Live Demo](https://codesandbox.io/s/5k30y1x05k)
+### Live Demo
+
+[Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
+[Context](https://codesandbox.io/s/7zw28x215q)
+[Context + Data Binding](https://codesandbox.io/s/km4538r82r)
+[Full Example](https://codesandbox.io/s/5k30y1x05k)
 
 [Issues](https://github.com/StayDistributed/react-distributed-forms/issues)
 
@@ -25,7 +30,7 @@ Add react-distributed-forms to your project.
 npm i react-distributed-forms --save
 ```
 
-## Use in your modules
+## Includes
 
 ```js
 import { Form, Input, Selext, Textarea, Button } from "react-distributed-forms";
@@ -73,7 +78,9 @@ Get notified when user remove focus from field, if the field value is changed
 
 You can pass a key-value object to `<Form>`, this will be used to set the value of the fields based on their attribute "name"
 
-This is the simplest scenario, when you bind the state of the component, [Live demo here](https://codesandbox.io/s/4jy3x6xpx4):
+[Live Demo of Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
+
+This is the simplest scenario, when you bind the state of the component:
 
 ```js
 class SomeComponent extends React.Component {
@@ -142,6 +149,12 @@ From [React Context](https://reactjs.org/docs/context.html) page:
 This means that even if the **Fields** or the **Nested Form** you put inside a **Form** is elsewhere in your code, you don't have to wire it passing props, or building it in the same component.
 
 You just create an `<Input>`, or `<Select>`, or `<Textarea>`, or `<Button>`, or a `<Form>` itself, wherever you need in your code, and if it has a `<Form>`as an ancestor in the tree, it will start to talk with him.
+
+Demo:
+[Context](https://codesandbox.io/s/7zw28x215q)
+[Context + Data Binding](https://codesandbox.io/s/km4538r82r)
+
+Example:
 
 _Animal.js_
 
