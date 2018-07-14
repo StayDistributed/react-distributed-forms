@@ -15,6 +15,8 @@ Every input is inside a form, _react-distributed-forms_ let you write the html y
 
 [Live Demo](https://codesandbox.io/s/5k30y1x05k)
 
+[Issues](https://github.com/StayDistributed/react-distributed-forms/issues)
+
 ## Installation
 
 Add react-distributed-forms to your project.
@@ -31,7 +33,7 @@ import { Form, Input, Selext, Textarea, Button } from "react-distributed-forms";
 
 ## Getting Started
 
-Basic Input
+Basic `<Input>`
 
 ```js
 <Input />
@@ -39,7 +41,7 @@ Basic Input
 // <input type="text"></input>
 ```
 
-Listen to Input's changes
+Listen to `<Input>` changes
 
 ```js
 <Form onFieldChange={({ name, value }) => {}}>
@@ -69,29 +71,28 @@ Get notified when user remove focus from field, if the field value is changed
 
 ## Nested Forms
 
+You can have a `<Form>` inside another `<Form>`, in this case the Forms will receive changes from all the fields contained in the Form itself or in a Form down in the hierarchy.
+
+In the example Form with id="parent" will receive changes from all the fields inside: username, genre, and also "privacy". The Form with id="child" will receive only the changes of the field "privacy".
+
 ```js
-// this Form will receive changes from all the fields inside:
-//username, genre, and also "privacy"
-<Form onFieldChange={({ name, value }) => {}}>
+<Form id="parent" onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
   <Select name="genre">
     <option value="m">Male</option>
     <option value="f">Female</option>
   </Select>
-  // this Form will receive changes only from the field "privacy"
-  <Form onFieldChange={({ name, value }) => {}}>
+  <Form id="child" onFieldChange={({ name, value }) => {}}>
     <label>Privacy Agreement</label>
     <Input type="checkbox" name="privacy" />
   </Form>
 </Form>
 ```
 
+If you don't want that a Form propagate changes to upper levels, use the prop "stopPropagation" prop. In the example the Form with id="parent" will receive changes only from "username" and "genre" because the nested Form has "stopPropagation" set
+
 ```js
-// if you don't want that a Form propagate changes
-// to upper levels, use the prop "stopPropagation"
-// now this Form will receive changes only from "username"
-// and "genre" because the nested Form has "stopPropagation"
-<Form onFieldChange={({ name, value }) => {}}>
+<Form id="parent" onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
   <Select name="genre">
     <option value="m">Male</option>
@@ -103,6 +104,81 @@ Get notified when user remove focus from field, if the field value is changed
     <Input type="checkbox" name="privacy" />
   </Form>
 </Form>
+```
+
+## Unlock the power of React context API
+
+**react-distributed-forms** is built on top of [react-distributed-context](https://github.com/StayDistributed/react-distributed-context) that implements React context API.
+
+From [React Context](https://reactjs.org/docs/context.html) page:
+
+> Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+This means that even if the **Fields** or the **Nested Form** you put inside a **Form** is elsewhere in your code, you don't have to wire it passing props, or building it in the same component.
+
+You just create an `<Input>`, or `<Select>`, or `<Textarea>`, or `<Button>`, or a `<Form>` itself, wherever you need in your code, and if it has a `<Form>`as an ancestor in the tree, it will start to talk with him.
+
+_Animal.js_
+
+```js
+const Animal = () => (
+  <Form onFieldChange={({ name, value }) => {}}>
+    <Select name="type">
+      <option>Cat</option>
+      <option>Fish</option>
+      <option>Bird</option>
+    </Select>
+
+    {/* render the right animal component */}
+  </Form>
+);
+```
+
+_Cat.js_
+
+```js
+// you don't need a <Form>,
+// because you will render <Cat>
+// inside a component that already has a <Form>
+// and it will receive this component fields changes
+const Cat = () => (
+  <div className="Cat">
+    <Input type="number" name="number_of_legs" />
+
+    <label>
+      Is registered by law to cats'registry?
+      <Input type="checkbox" name="fish_registration" />
+    </label>
+  </div>
+);
+```
+
+_Fish.js_
+
+```js
+// same as Cat you don't need a <Form>,
+const Fish = () => (
+  <div className="Fish">
+    <Input type="number" name="number_of_fins" />
+  </div>
+);
+```
+
+_Bird.js_
+
+```js
+// same as Cat you don't need a <Form>,
+// but if you want you can have a Nested Form,
+// in this case the Animal <Form> will receive all the changes,
+// and the Bird <Form> only the changes of "number_of_legs" and "number_of_wings"
+const Bird = () => (
+  <div className="Bird">
+    <Form onFieldChange={({ name, value }) => {}}>
+      <Input type="number" name="number_of_legs" />
+      <Input type="number" name="number_of_wings" />
+    </Form>
+  </div>
+);
 ```
 
 ## <Form> Props
@@ -127,7 +203,7 @@ Triggered every time a field lose focused
 
 ### onFieldDidChanged({name, value})
 
-Triggered every time a field has changed its value and user has finished editing it, for example when a Select changes value or an Input type="text" lose focus after editing
+Triggered every time a field has changed its value and user has finished editing it, for example when a `<Select>` changes value or an `<Input type="text">` lose focus after editing
 
 - you can use it to call your backend automatically on form editing.
 
@@ -135,7 +211,7 @@ Triggered every time a field has changed its value and user has finished editing
 
 Triggered every time a Button inside a from is clicked
 
-## Create a basic form
+## Example
 
 ```js
 import React from 'react';
