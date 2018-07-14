@@ -4,14 +4,14 @@
 [![npm package][npm-badge]][npm]
 [![Coveralls][coveralls-badge]][coveralls]
 
-react-distributed-forms
-
 [build-badge]: https://img.shields.io/travis/StayDistributed/react-distributed-forms/master.png?style=flat-square
 [build]: https://travis-ci.org/StayDistributed/react-distributed-forms
 [npm-badge]: https://img.shields.io/npm/v/react-distributed-forms.png?style=flat-square
 [npm]: https://www.npmjs.com/package/react-distributed-forms
 [coveralls-badge]: https://img.shields.io/coveralls/StayDistributed/react-distributed-forms/master.png?style=flat-square
 [coveralls]: https://coveralls.io/github/StayDistributed/react-distributed-forms
+
+Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can build awesome _nested forms_ (see below).
 
 ## Installation
 
@@ -63,6 +63,41 @@ Get notified when user remove focus from field, if the field value is changed
 //   <option value="m">Male</option>
 //   <option value="f">Female</option>
 // </select>
+```
+
+## Nested Forms
+
+```js
+// this Form will receive changes from all the fields inside: username, genre, and also "privacy"
+<Form onFieldChange={(name, value) => {}}>
+  <Input name="username" />
+  <Select name="genre">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </Select>
+  // this Form will receive changes only from the field "privacy"
+  <Form onFieldChange={(name, value) => {}}>
+    <label>Privacy Agreement</label>
+    <Input type="checkbox" name="privacy" />
+  </Form>
+</Form>
+```
+
+```js
+// if you don't want that a Form propagate changes to upper levels, use the prop "stopPropagation"
+// now this Form will receive changes only from "username" and "genre" because the nested Form has "stopPropagation"
+<Form onFieldChange={(name, value) => {}}>
+  <Input name="username" />
+  <Select name="genre">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </Select>
+
+  <Form onFieldChange={(name, value) => {}} stopPropagation>
+    <label>Privacy Agreement</label>
+    <Input type="checkbox" name="privacy" />
+  </Form>
+</Form>
 ```
 
 ## <Form> Props
