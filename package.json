@@ -32,7 +32,7 @@
     "react-test-renderer": "^16.4.1"
   },
   "author": "Michele Salvini",
-  "homepage": "",
+  "homepage": "https://github.com/StayDistributed/react-distributed-forms",
   "license": "MIT",
   "repository": "https://github.com/StayDistributed/react-distributed-forms",
   "keywords": [
