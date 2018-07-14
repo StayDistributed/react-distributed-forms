@@ -69,6 +69,31 @@ Get notified when user remove focus from field, if the field value is changed
 // </select>
 ```
 
+## Data Binding
+
+You can pass a key-value object to `<Form>`, this will be used to set the value of the fields based on their attribute "name"
+
+This is the simplest scenario, when you bind the state of the component, [Live demo here](https://codesandbox.io/s/4jy3x6xpx4):
+
+```js
+class SomeComponent extends React.Component {
+  state = {
+    first_name: "George"
+  };
+
+  render() {
+    return (
+      <Form
+        binding={this.state}
+        onFieldChange={({ name, value }) => this.setState({ [name]: value })}
+      >
+        <Input name="first_name" />
+      </Form>
+    );
+  }
+}
+```
+
 ## Nested Forms
 
 You can have a `<Form>` inside another `<Form>`, in this case the Forms will receive changes from all the fields contained in the Form itself or in a Form down in the hierarchy.
@@ -210,6 +235,14 @@ Triggered every time a field has changed its value and user has finished editing
 ### onSubmit({name, value})
 
 Triggered every time a Button inside a from is clicked
+
+### binding
+
+A Key-Value object to automatically set the value of the fields, based on their "name" attributes.
+
+### stopPropagation
+
+if set `<Form stopPropagation>` the forms that are upper in the hierarchy won't receive data from fields inside this Form.
 
 ## Example
 
