@@ -110,6 +110,7 @@ export default class extends Component {
   };
 
   static defaultProps = {
-    name: ""
+    name: "",
+    type: "text"
   };
 }

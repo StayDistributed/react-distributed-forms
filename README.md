@@ -21,6 +21,50 @@ Add react-distributed-forms to your project.
 npm i react-distributed-forms --save
 ```
 
+## Use in your modules
+
+```js
+import { Form, Input, Selext, Textarea, Button } from "react-distributed-forms";
+```
+
+## Getting Started
+
+Basic Input
+
+```js
+<Input />
+
+// <input type="text"></input>
+```
+
+Listen to Input's changes
+
+```js
+<Form onFieldChange={(name, value) => {}}>
+  <Input name="username" />
+</Form>
+
+// <input type="text" name="username"></input>
+```
+
+Get notified when user remove focus from field, if the field value is changed
+
+```js
+<Form onFieldDidChanged={(name, value) => {}}>
+  <Input name="username" />
+  <Select name="genre">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </Select>
+</Form>
+
+// <input type="text" name="username"></input>
+// <select name="genre">
+//   <option value="m">Male</option>
+//   <option value="f">Female</option>
+// </select>
+```
+
 ## <Form> Props
 
 ### onFieldChange(name, value)
@@ -104,7 +148,12 @@ class UserInfoForm extends React.Component {
 
   render () {
     return (
-      <Form binding={this.state} onFieldChange={this.onFieldChange} onFieldDidChanged={this.onFieldDidChanged} onSubmit={this.onSubmit}>
+      <Form
+        binding={this.state}
+        onFieldChange={this.onFieldChange}
+        onFieldDidChanged={this.onFieldDidChanged}
+        onSubmit={this.onSubmit}
+      >
         <div>
           <label for="first_name">First Name:</label>
           <Input type="text" id="first_name" name="first_name" />
