@@ -146,7 +146,7 @@ const Cat = () => (
     <Input type="number" name="number_of_legs" />
 
     <label>
-      Is registered by law to cats'registry?
+      {`Is registered by law to cats'registry?`}
       <Input type="checkbox" name="fish_registration" />
     </label>
   </div>
