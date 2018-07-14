@@ -16,8 +16,11 @@ Every input is inside a form, _react-distributed-forms_ let you write the html y
 ### Live Demo
 
 [Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
+
 [Context](https://codesandbox.io/s/7zw28x215q)
+
 [Context + Data Binding](https://codesandbox.io/s/km4538r82r)
+
 [Full Example](https://codesandbox.io/s/5k30y1x05k)
 
 [Issues](https://github.com/StayDistributed/react-distributed-forms/issues)
@@ -151,7 +154,9 @@ This means that even if the **Fields** or the **Nested Form** you put inside a *
 You just create an `<Input>`, or `<Select>`, or `<Textarea>`, or `<Button>`, or a `<Form>` itself, wherever you need in your code, and if it has a `<Form>`as an ancestor in the tree, it will start to talk with him.
 
 Demo:
+
 [Context](https://codesandbox.io/s/7zw28x215q)
+
 [Context + Data Binding](https://codesandbox.io/s/km4538r82r)
 
 Example:
