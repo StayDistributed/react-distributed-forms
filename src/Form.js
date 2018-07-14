@@ -65,5 +65,10 @@ Form.defaultProps = {
 
 Form.propTypes = {
   stopPropagation: PropTypes.bool,
-  binding: PropTypes.object
+  binding: PropTypes.object,
+  onFieldChange: PropTypes.func,
+  onFieldFocus: PropTypes.func,
+  onFieldBlur: PropTypes.func,
+  onFieldDidChanged: PropTypes.func,
+  onSubmit: PropTypes.func
 };

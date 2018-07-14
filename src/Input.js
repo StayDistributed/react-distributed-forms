@@ -55,9 +55,9 @@ class Input extends Component {
             didchanged: true
           },
           () => {
-            context.onFieldChange(name, value);
+            context.onFieldChange({ name, value });
             if (this.didChanged() && this.didChangedOnChange()) {
-              context.onFieldDidChanged(name, value);
+              context.onFieldDidChanged({ name, value });
             }
           }
         );
@@ -69,15 +69,15 @@ class Input extends Component {
             didchanged: false
           },
           () => {
-            context.onFieldFocus(name, value);
+            context.onFieldFocus({ name, value });
           }
         );
       },
       onBlur: e => {
         const value = this.getValue(e);
-        context.onFieldBlur(name, value);
+        context.onFieldBlur({ name, value });
         if (this.didChanged() && this.didChangedOnBlur()) {
-          context.onFieldDidChanged(name, value);
+          context.onFieldDidChanged({ name, value });
         }
       }
     };

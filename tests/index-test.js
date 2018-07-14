@@ -5,10 +5,10 @@ import { create } from "react-test-renderer";
 import { Form, Input, Select } from "src/";
 import { Textarea } from "../src";
 
-describe("Component", () => {
+describe("General", () => {
   let tree;
 
-  it("displays a welcome message", () => {
+  it("render a form", () => {
     tree = create(
       <Form>
         <fieldset>
@@ -76,6 +76,6 @@ describe("Component", () => {
       </Form>
     ).toJSON();
 
-    console.log(tree[0].children);
+    expect(tree[0].children).toBeTruthy();
   });
 });

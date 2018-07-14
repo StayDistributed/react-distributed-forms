@@ -37,7 +37,7 @@ class Textarea extends Component {
             didchanged: true
           },
           () => {
-            context.onFieldChange(name, value);
+            context.onFieldChange({ name, value });
           }
         );
       },
@@ -48,15 +48,15 @@ class Textarea extends Component {
             didchanged: false
           },
           () => {
-            context.onFieldFocus(name, value);
+            context.onFieldFocus({ name, value });
           }
         );
       },
       onBlur: e => {
         const value = this.getValue(e);
-        context.onFieldBlur(name, value);
+        context.onFieldBlur({ name, value });
         if (this.didChanged()) {
-          context.onFieldDidChanged(name, value);
+          context.onFieldDidChanged({ name, value });
         }
       }
     };

@@ -29,16 +29,16 @@ class Select extends Component {
 
       onChange: e => {
         const value = this.getValue(e);
-        context.onFieldChange(name, value);
-        context.onFieldDidChanged(name, value);
+        context.onFieldChange({ name, value });
+        context.onFieldDidChanged({ name, value });
       },
       onFocus: e => {
         const value = this.getValue(e);
-        context.onFieldFocus(name, value);
+        context.onFieldFocus({ name, value });
       },
       onBlur: e => {
         const value = this.getValue(e);
-        context.onFieldBlur(name, value);
+        context.onFieldBlur({ name, value });
       }
     };
   };

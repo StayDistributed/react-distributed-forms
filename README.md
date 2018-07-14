@@ -11,7 +11,7 @@
 [coveralls-badge]: https://img.shields.io/coveralls/StayDistributed/react-distributed-forms/master.png?style=flat-square
 [coveralls]: https://coveralls.io/github/StayDistributed/react-distributed-forms
 
-Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can build awesome _nested forms_ (see below).
+Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can also build awesome _nested forms_ (see below).
 
 ## Installation
 
@@ -40,7 +40,7 @@ Basic Input
 Listen to Input's changes
 
 ```js
-<Form onFieldChange={(name, value) => {}}>
+<Form onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
 </Form>
 
@@ -50,7 +50,7 @@ Listen to Input's changes
 Get notified when user remove focus from field, if the field value is changed
 
 ```js
-<Form onFieldDidChanged={(name, value) => {}}>
+<Form onFieldDidChanged={({ name, value }) => {}}>
   <Input name="username" />
   <Select name="genre">
     <option value="m">Male</option>
@@ -68,15 +68,16 @@ Get notified when user remove focus from field, if the field value is changed
 ## Nested Forms
 
 ```js
-// this Form will receive changes from all the fields inside: username, genre, and also "privacy"
-<Form onFieldChange={(name, value) => {}}>
+// this Form will receive changes from all the fields inside:
+//username, genre, and also "privacy"
+<Form onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
   <Select name="genre">
     <option value="m">Male</option>
     <option value="f">Female</option>
   </Select>
   // this Form will receive changes only from the field "privacy"
-  <Form onFieldChange={(name, value) => {}}>
+  <Form onFieldChange={({ name, value }) => {}}>
     <label>Privacy Agreement</label>
     <Input type="checkbox" name="privacy" />
   </Form>
@@ -84,16 +85,18 @@ Get notified when user remove focus from field, if the field value is changed
 ```
 
 ```js
-// if you don't want that a Form propagate changes to upper levels, use the prop "stopPropagation"
-// now this Form will receive changes only from "username" and "genre" because the nested Form has "stopPropagation"
-<Form onFieldChange={(name, value) => {}}>
+// if you don't want that a Form propagate changes
+// to upper levels, use the prop "stopPropagation"
+// now this Form will receive changes only from "username"
+// and "genre" because the nested Form has "stopPropagation"
+<Form onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
   <Select name="genre">
     <option value="m">Male</option>
     <option value="f">Female</option>
   </Select>
 
-  <Form onFieldChange={(name, value) => {}} stopPropagation>
+  <Form onFieldChange={({ name, value }) => {}} stopPropagation>
     <label>Privacy Agreement</label>
     <Input type="checkbox" name="privacy" />
   </Form>
@@ -102,31 +105,31 @@ Get notified when user remove focus from field, if the field value is changed
 
 ## <Form> Props
 
-### onFieldChange(name, value)
+### onFieldChange({name, value})
 
 Triggered every time a field changes its value
 
 - you can use it to update your state.
 
-### onFieldFocus(name, value)
+### onFieldFocus({name, value})
 
 Triggered every time a field is focused
 
 - you can use for changing styles of focused input
 
-### onFieldBlur(name, value)
+### onFieldBlur({name, value})
 
 Triggered every time a field lose focused
 
 - you can use for removing styles of focuesd input
 
-### onFieldDidChanged(name, value)
+### onFieldDidChanged({name, value})
 
 Triggered every time a field has changed its value and user has finished editing it, for example when a Select changes value or an Input type="text" lose focus after editing
 
 - you can use it to call your backend automatically on form editing.
 
-### onSubmit(name, value)
+### onSubmit({name, value})
 
 Triggered every time a Button inside a from is clicked
 
@@ -150,7 +153,7 @@ class UserInfoForm extends React.Component {
   /**
    * onFieldChange
    */
-  onFieldChange(name, value) {
+  onFieldChange({name, value}) {
     this.setState({
       [name]: value
     });
@@ -160,7 +163,7 @@ class UserInfoForm extends React.Component {
    * onFieldDidChanged
    * called from Form's fields to indicate user has finished editing the input
    */
-  onFieldDidChanged(name, value) {
+  onFieldDidChanged({name, value}) {
     if (AUTO_SAVE_ON_CHANGE_ENABLED) {
       this.setState({
         [name]: value
@@ -175,7 +178,7 @@ class UserInfoForm extends React.Component {
    * onSubmit
    * called from Form's fields when form has to be submitted
    */
-  onSubmit(name, value) {
+  onSubmit({name, value}) {
     if (name === 'submit') {
       ajaxPOST(YOUR_API_ENDPOINT, this.state);
     }

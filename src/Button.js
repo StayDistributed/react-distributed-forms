@@ -10,13 +10,13 @@ class Button extends Component {
 
     return {
       onClick: e => {
-        context.onSubmit(name, value);
+        context.onSubmit({ name, value });
       },
       onFocus: e => {
-        context.onFieldFocus(name, value);
+        context.onFieldFocus({ name, value });
       },
       onBlur: e => {
-        context.onFieldBlur(name, value);
+        context.onFieldBlur({ name, value });
       }
     };
   };

@@ -18,7 +18,7 @@ class Demo extends Component {
     }
   };
 
-  onChange = (name, value) => {
+  onChange = ({ name, value }) => {
     this.setState(({ all }) => ({
       all: {
         ...all,
@@ -28,7 +28,7 @@ class Demo extends Component {
     }));
   };
 
-  onJobFormFieldChange = (name, value) => {
+  onJobFormFieldChange = ({ name, value }) => {
     this.setState(({ job }) => ({
       job: {
         ...job,
@@ -37,7 +37,7 @@ class Demo extends Component {
     }));
   };
 
-  onAddressFormFieldChange = (name, value) => {
+  onAddressFormFieldChange = ({ name, value }) => {
     this.setState(({ address }) => ({
       address: {
         ...address,
@@ -46,7 +46,7 @@ class Demo extends Component {
     }));
   };
 
-  onPrivacyFormFieldChange = (name, value) => {
+  onPrivacyFormFieldChange = ({ name, value }) => {
     this.setState(({ privacy }) => ({
       privacy: {
         ...privacy,
