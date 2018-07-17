@@ -59,6 +59,16 @@ Listen to `<Input>` changes
 // <input type="text" name="username"></input>
 ```
 
+Give `<Input>` values
+
+```js
+<Form values={{ username: "SuperHero" }}>
+  <Input name="username" />
+</Form>
+
+// <input type="text" name="username"></input>
+```
+
 Get notified when user remove focus from field, if the field value is changed
 
 ```js
@@ -79,7 +89,59 @@ Get notified when user remove focus from field, if the field value is changed
 
 ## Data Binding
 
-You can pass a React Component to `<Form>`, this will be used to write every fields'change into the state of the component
+Usually you spend a lot of time doing this for every field of your form:
+
+```js
+// CLASSIC WAY:
+
+class SomeComponent extends React.Component {
+  state = {
+    first_name: "George",
+    last_name: "Washington"
+    // init all the values to avoid "switching to controlled" warning
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange = e => {
+    // input is type="text"
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+
+    // input is type="checkbox"
+    // ...
+
+    // input is type="radio"
+    // ...
+
+    // input is select
+    // ...
+  };
+
+  render() {
+    return (
+      <form>
+        <input
+          name="first_name"
+          value={this.state.first_name}
+          onChange={this.handleChange}
+        />
+        <input
+          name="last_name"
+          value={this.state.last_name}
+          onChange={this.handleChange}
+        />
+      </form>
+    );
+  }
+}
+```
+
+with _react-distributed-forms_ you can pass a React Component to `<Form>`, this will be used to write every fields'change into the state of the component
 
 [Live Demo of Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
 

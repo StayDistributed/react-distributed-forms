@@ -6,9 +6,7 @@ import "./index.css";
 
 class Demo extends Component {
   state = {
-    all: {
-      firstname: ""
-    },
+    firstname: "George",
     job: {
       developer: 1,
       company: "Google"
