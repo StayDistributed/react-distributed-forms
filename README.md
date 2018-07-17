@@ -143,8 +143,6 @@ class SomeComponent extends React.Component {
 
 with _react-distributed-forms_ you can pass a React Component to `<Form>`, this will be used to write every fields'change into the state of the component
 
-[Live Demo of Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
-
 This is the simplest scenario, when you bind the state of the component:
 
 ```js
@@ -182,6 +180,8 @@ class SomeComponent extends React.Component {
   }
 }
 ```
+
+[Live Demo of Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
 
 ## Nested Forms
 
