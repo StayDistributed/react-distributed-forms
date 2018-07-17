@@ -18,44 +18,6 @@ class Demo extends Component {
     }
   };
 
-  onChange = ({ name, value }) => {
-    this.setState(({ all }) => ({
-      all: {
-        ...all,
-        gender: "Male",
-        [name]: value
-      }
-    }));
-  };
-
-  onJobFormFieldChange = ({ name, value }) => {
-    this.setState(({ job }) => ({
-      job: {
-        ...job,
-        [name]: value
-      }
-    }));
-  };
-
-  onAddressFormFieldChange = ({ name, value }) => {
-    this.setState(({ address }) => ({
-      address: {
-        ...address,
-        [name]: value
-      }
-    }));
-  };
-
-  onPrivacyFormFieldChange = ({ name, value }) => {
-    this.setState(({ privacy }) => ({
-      privacy: {
-        ...privacy,
-        privacy_agreement_type: "totally",
-        [name]: value
-      }
-    }));
-  };
-
   autoSave = () => {
     this.setState({ callingServer: true }, () =>
       setTimeout(() => {
@@ -69,10 +31,9 @@ class Demo extends Component {
       <div>
         <h1>react-distributed-forms Demo</h1>
         <Form
-          onFieldChange={this.onChange}
           onFieldDidChanged={this.autoSave}
           onSubmit={this.autoSave}
-          binding={this.state.all}
+          binding={this}
         >
           <fieldset>
             <legend>Personal Info</legend>
@@ -101,7 +62,7 @@ class Demo extends Component {
               </label>
             </div>
           </fieldset>
-          <Form onFieldChange={this.onAddressFormFieldChange}>
+          <Form>
             <fieldset>
               <legend>Address</legend>
               <div>
@@ -121,10 +82,7 @@ class Demo extends Component {
               </div>
             </fieldset>
           </Form>
-          <Form
-            onFieldChange={this.onJobFormFieldChange}
-            binding={this.state.job}
-          >
+          <Form binding={[this, "job"]}>
             <fieldset>
               <legend>Job Info</legend>
               <div>
@@ -167,11 +125,7 @@ and I build`}
               </div>
             </fieldset>
           </Form>
-          <Form
-            onFieldChange={this.onPrivacyFormFieldChange}
-            stopPropagation
-            binding={this.state.privacy}
-          >
+          <Form stopPropagation binding={[this, "privacy"]}>
             <fieldset>
               <legend>Privacy</legend>
               <div>
@@ -200,14 +154,26 @@ and I build`}
                 </label>
               </div>
             </fieldset>
+            <fieldset>
+              <legend>Unset Radios</legend>
+              <div>
+                <label>
+                  value1{" "}
+                  <Input type="radio" name="unset_radio" value="value1" />
+                </label>
+              </div>
+              <div>
+                <label>
+                  value2{" "}
+                  <Input type="radio" name="unset_radio" value="value2" />
+                </label>
+              </div>
+            </fieldset>
           </Form>
 
           <Button>Submit</Button>
         </Form>
-        <pre>All: {JSON.stringify(this.state.all, "", 2)}</pre>
-        <pre>Address: {JSON.stringify(this.state.address, "", 2)}</pre>
-        <pre>Job: {JSON.stringify(this.state.job, "", 2)}</pre>
-        <pre>Privacy: {JSON.stringify(this.state.privacy, "", 2)}</pre>
+        <pre>state: {JSON.stringify(this.state, "", 2)}</pre>
 
         {this.state.callingServer && (
           <div

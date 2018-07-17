@@ -37,15 +37,24 @@ class Input extends Component {
 
   getProps = () => {
     const { name, type, value, context } = this.props;
-    const binding = name in context.binding;
+    const { values, setValues, initValues } = context || {};
+    const hasValue = values && name in values;
 
     return {
-      ...(binding
+      ...(initValues
         ? type === "checkbox"
-          ? { checked: context.binding[name] ? true : false }
+          ? { checked: value || false }
           : type === "radio"
-            ? { checked: context.binding[name] === value ? true : false }
-            : { value: context.binding[name] }
+            ? { checked: false }
+            : { value: value || "" }
+        : null),
+
+      ...(hasValue
+        ? type === "checkbox"
+          ? { checked: values[name] ? true : false }
+          : type === "radio"
+            ? { checked: values[name] === value ? true : false }
+            : { value: values[name] }
         : null),
 
       onChange: e => {
@@ -55,7 +64,12 @@ class Input extends Component {
             didchanged: true
           },
           () => {
+            if (setValues) {
+              setValues({ [name]: value });
+            }
+
             context.onFieldChange({ name, value });
+
             if (this.didChanged() && this.didChangedOnChange()) {
               context.onFieldDidChanged({ name, value });
             }

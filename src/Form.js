@@ -18,8 +18,56 @@ export default class Form extends Component {
       }
     };
 
+    const hasValues = "values" in props;
+
+    let values = hasValues
+      ? props.values
+      : "values" in parentValue
+        ? parentValue.values
+        : null;
+
+    let setValues =
+      !hasValues && !("binding" in props) ? parentValue.setValues : null;
+
+    /**
+     * If `values` is set, binding is ignored and nullified
+     */
+    if (!hasValues && props.binding) {
+      if (props.binding.setState && props.binding.state) {
+        values = props.binding.state;
+        setValues = changes => {
+          props.binding.setState(changes);
+        };
+      } else if (
+        props.binding[0] &&
+        props.binding[0].setState &&
+        props.binding[1]
+      ) {
+        values = props.binding[0].state[props.binding[1]];
+        setValues = changes => {
+          props.binding[0].setState({
+            ...props.binding[0].state,
+            [props.binding[1]]: {
+              ...props.binding[0].state[props.binding[1]],
+              ...changes
+            }
+          });
+        };
+      }
+    }
+
     return {
-      binding: { ...props.binding },
+      /**
+       * Getter and Setter for values
+       */
+      values,
+      setValues,
+
+      /**
+       * Init values, force value to be !== null
+       * to avoid warning about switching to controlled component
+       */
+      initValues: hasValues && props.initValues,
 
       /**
        * onFieldChange
@@ -60,12 +108,14 @@ export default class Form extends Component {
 
 Form.defaultProps = {
   stopPropagation: false,
-  binding: {}
+  initValues: true
 };
 
 Form.propTypes = {
   stopPropagation: PropTypes.bool,
-  binding: PropTypes.object,
+  initValues: PropTypes.bool,
+  values: PropTypes.object,
+  binding: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   onFieldChange: PropTypes.func,
   onFieldFocus: PropTypes.func,
   onFieldBlur: PropTypes.func,

@@ -79,7 +79,7 @@ Get notified when user remove focus from field, if the field value is changed
 
 ## Data Binding
 
-You can pass a key-value object to `<Form>`, this will be used to set the value of the fields based on their attribute "name"
+You can pass a React Component to `<Form>`, this will be used to write every fields'change into the state of the component
 
 [Live Demo of Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
 
@@ -93,10 +93,27 @@ class SomeComponent extends React.Component {
 
   render() {
     return (
-      <Form
-        binding={this.state}
-        onFieldChange={({ name, value }) => this.setState({ [name]: value })}
-      >
+      <Form binding={this}>
+        <Input name="first_name" />
+      </Form>
+    );
+  }
+}
+```
+
+You can also bind Form values to a different key of the state:
+
+```js
+class SomeComponent extends React.Component {
+  state = {
+    formdata: {
+      first_name: "George"
+    }
+  };
+
+  render() {
+    return (
+      <Form binding={[this, "formdata"]}>
         <Input name="first_name" />
       </Form>
     );
@@ -254,15 +271,21 @@ Triggered every time a field has changed its value and user has finished editing
 
 Triggered every time a Button inside a from is clicked
 
-### binding
+### values
 
 A Key-Value object to automatically set the value of the fields, based on their "name" attributes.
+
+### binding
+
+A React Component to bind state with, you can pass only the component like `binding={this}` or if you want to bind an internal key of state you can pass an array `binding={[this, 'the_state_key_to_bind']}`
 
 ### stopPropagation
 
 if set `<Form stopPropagation>` the forms that are upper in the hierarchy won't receive data from fields inside this Form.
 
 ## Example
+
+With binding set to `this`, every change in the Form will be written to the Component state.
 
 ```js
 import React from 'react';
@@ -278,15 +301,6 @@ class UserInfoForm extends React.Component {
     first_name: 'John',
     last_name: 'Doe'
   };
-
-  /**
-   * onFieldChange
-   */
-  onFieldChange({name, value}) {
-    this.setState({
-      [name]: value
-    });
-  },
 
   /**
    * onFieldDidChanged
@@ -316,8 +330,7 @@ class UserInfoForm extends React.Component {
   render () {
     return (
       <Form
-        binding={this.state}
-        onFieldChange={this.onFieldChange}
+        binding={this}
         onFieldDidChanged={this.onFieldDidChanged}
         onSubmit={this.onSubmit}
       >

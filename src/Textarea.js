@@ -24,11 +24,14 @@ class Textarea extends Component {
   getValue = e => e.target.value;
 
   getProps = () => {
-    const { name, context } = this.props;
-    const binding = name in context.binding;
+    const { name, value, context } = this.props;
+    const { values, setValues, initValues } = context || {};
+    const hasValue = values && name in values;
 
     return {
-      ...(binding ? { value: context.binding[name] } : null),
+      ...(initValues ? { value: value || "" } : null),
+
+      ...(hasValue ? { value: values[name] } : null),
 
       onChange: e => {
         const value = this.getValue(e);
@@ -37,6 +40,9 @@ class Textarea extends Component {
             didchanged: true
           },
           () => {
+            if (setValues) {
+              setValues({ [name]: value });
+            }
             context.onFieldChange({ name, value });
           }
         );
