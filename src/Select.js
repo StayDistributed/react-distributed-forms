@@ -31,6 +31,10 @@ class Select extends Component {
       ...(hasValue ? { value: values[name] } : null),
 
       onChange: e => {
+        if (this.props.onChange) {
+          this.props.onChange(e);
+        }
+
         const value = this.getValue(e);
         if (setValues) {
           setValues({ [name]: value });
@@ -39,10 +43,18 @@ class Select extends Component {
         context.onFieldDidChanged({ name, value });
       },
       onFocus: e => {
+        if (this.props.onFocus) {
+          this.props.onFocus(e);
+        }
+
         const value = this.getValue(e);
         context.onFieldFocus({ name, value });
       },
       onBlur: e => {
+        if (this.props.onBlur) {
+          this.props.onBlur(e);
+        }
+
         const value = this.getValue(e);
         context.onFieldBlur({ name, value });
       }

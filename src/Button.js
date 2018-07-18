@@ -10,12 +10,21 @@ class Button extends Component {
 
     return {
       onClick: e => {
+        if (this.props.onClick) {
+          this.props.onClick(e);
+        }
         context.onSubmit({ name, value });
       },
       onFocus: e => {
+        if (this.props.onFocus) {
+          this.props.onFocus(e);
+        }
         context.onFieldFocus({ name, value });
       },
       onBlur: e => {
+        if (this.props.onBlur) {
+          this.props.onBlur(e);
+        }
         context.onFieldBlur({ name, value });
       }
     };

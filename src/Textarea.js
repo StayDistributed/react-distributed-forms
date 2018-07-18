@@ -34,6 +34,10 @@ class Textarea extends Component {
       ...(hasValue ? { value: values[name] } : null),
 
       onChange: e => {
+        if (this.props.onChange) {
+          this.props.onChange(e);
+        }
+
         const value = this.getValue(e);
         this.setState(
           {
@@ -48,6 +52,10 @@ class Textarea extends Component {
         );
       },
       onFocus: e => {
+        if (this.props.onFocus) {
+          this.props.onFocus(e);
+        }
+
         const value = this.getValue(e);
         this.setState(
           {
@@ -59,6 +67,10 @@ class Textarea extends Component {
         );
       },
       onBlur: e => {
+        if (this.props.onBlur) {
+          this.props.onBlur(e);
+        }
+
         const value = this.getValue(e);
         context.onFieldBlur({ name, value });
         if (this.didChanged()) {
