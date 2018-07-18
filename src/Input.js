@@ -7,14 +7,12 @@ class Input extends Component {
     didchanged: false
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.value !== state.value) {
-      return {
-        value: state.value
-      };
+  componentDidMount() {
+    const { name, value, context } = this.props;
+    const { values, setValues } = context || {};
+    if ("value" in this.props && !(name in values) && setValues) {
+      setValues({ [name]: value });
     }
-
-    return null;
   }
 
   didChanged() {
@@ -57,48 +55,99 @@ class Input extends Component {
             : { value: values[name] }
         : null),
 
-      onChange: e => {
-        const value = this.getValue(e);
-        this.setState(
-          {
-            didchanged: true
-          },
-          () => {
-            if (setValues) {
-              setValues({ [name]: value });
-            }
-
-            context.onFieldChange({ name, value });
-
-            if (this.didChanged() && this.didChangedOnChange()) {
-              context.onFieldDidChanged({ name, value });
-            }
+      onChange: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onChange,
+           */
+          if (this.props.onChange) {
+            this.props.onChange(e);
           }
-        );
-      },
-      onFocus: e => {
-        const value = this.getValue(e);
-        this.setState(
-          {
-            didchanged: false
-          },
-          () => {
-            context.onFieldFocus({ name, value });
+
+          const value = this.getValue(e);
+          this.setState(
+            {
+              didchanged: true
+            },
+            () => {
+              context
+                .onFieldChange({ name, value })
+                .then(() => {
+                  const onDidChanged = () => {
+                    if (this.didChanged() && this.didChangedOnChange()) {
+                      context
+                        .onFieldDidChanged({ name, value })
+                        .then(() => resolve())
+                        .catch(e => reject());
+                    } else {
+                      resolve();
+                    }
+                  };
+
+                  if (setValues) {
+                    setValues({ [name]: value })
+                      .then(onDidChanged)
+                      .catch(e => reject());
+                  } else {
+                    onDidChanged();
+                  }
+                })
+                .catch(e => reject(e));
+            }
+          );
+        }),
+      onFocus: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onFocus,
+           */
+          if (this.props.onFocus) {
+            this.props.onFocus(e);
           }
-        );
-      },
-      onBlur: e => {
-        const value = this.getValue(e);
-        context.onFieldBlur({ name, value });
-        if (this.didChanged() && this.didChangedOnBlur()) {
-          context.onFieldDidChanged({ name, value });
-        }
-      }
+
+          const value = this.getValue(e);
+          this.setState(
+            {
+              didchanged: false
+            },
+            () => {
+              context
+                .onFieldFocus({ name, value })
+                .then(() => resolve())
+                .catch(e => reject(e));
+            }
+          );
+        }),
+      onBlur: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onBlur,
+           */
+          if (this.props.onBlur) {
+            this.props.onBlur(e);
+          }
+
+          const value = this.getValue(e);
+
+          context
+            .onFieldBlur({ name, value })
+            .then(() => {
+              if (this.didChanged() && this.didChangedOnBlur()) {
+                context
+                  .onFieldDidChanged({ name, value })
+                  .then(() => resolve())
+                  .catch(e => reject(e));
+              } else {
+                resolve();
+              }
+            })
+            .catch(e => reject(e));
+        })
     };
   };
 
   render() {
-    return <input {...this.props} {...this.getProps()} />;
+    return <input {...{ ...this.props, context: null }} {...this.getProps()} />;
   }
 }
 

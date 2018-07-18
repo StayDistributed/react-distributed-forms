@@ -6,17 +6,24 @@ export default class Form extends Component {
   canPropagate = () => !this.props.stopPropagation;
 
   getContextValue(parentValue, props) {
-    const executeMethod = methodName => (...args) => {
-      if (props[methodName]) {
-        props[methodName](...args);
-      }
+    const executeMethod = methodName => (...args) =>
+      new Promise((resolve, reject) => {
+        if (props[methodName]) {
+          props[methodName](...args);
+        }
 
-      if (!this.canPropagate() || args[0].isStopped) return;
+        if (!this.canPropagate() || args[0].isStopped) return;
 
-      if (parentValue[methodName]) {
-        parentValue[methodName](...args);
-      }
-    };
+        /**
+         * TODO
+         * parentValue[methodName] is a Promise
+         */
+        if (parentValue[methodName]) {
+          parentValue[methodName](...args);
+        }
+
+        resolve();
+      });
 
     const hasValues = "values" in props;
 
@@ -35,24 +42,29 @@ export default class Form extends Component {
     if (!hasValues && props.binding) {
       if (props.binding.setState && props.binding.state) {
         values = props.binding.state;
-        setValues = changes => {
-          props.binding.setState(changes);
-        };
+        setValues = changes =>
+          new Promise(resolve => {
+            props.binding.setState(changes, () => resolve());
+          });
       } else if (
         props.binding[0] &&
         props.binding[0].setState &&
         props.binding[1]
       ) {
         values = props.binding[0].state[props.binding[1]];
-        setValues = changes => {
-          props.binding[0].setState({
-            ...props.binding[0].state,
-            [props.binding[1]]: {
-              ...props.binding[0].state[props.binding[1]],
-              ...changes
-            }
+        setValues = changes =>
+          new Promise(resolve => {
+            props.binding[0].setState(
+              {
+                ...props.binding[0].state,
+                [props.binding[1]]: {
+                  ...props.binding[0].state[props.binding[1]],
+                  ...changes
+                }
+              },
+              () => resolve()
+            );
           });
-        };
       }
     }
 
@@ -67,7 +79,7 @@ export default class Form extends Component {
        * Init values, force value to be !== null
        * to avoid warning about switching to controlled component
        */
-      initValues: hasValues && props.initValues,
+      initValues: values && props.initValues,
 
       /**
        * onFieldChange
