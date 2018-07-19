@@ -69,6 +69,17 @@ describe("Form", () => {
   });
 
   it("binding", async () => {
+    component = create(
+      <Form values={{ firstname: "Andy" }}>
+        <Input type="text" name="firstname" />
+      </Form>
+    );
+    tree = component.toJSON();
+
+    expect(tree.props.value).toBe("Andy");
+  });
+
+  it("binding", async () => {
     class TestForm extends React.Component {
       state = {
         firstname: "George"

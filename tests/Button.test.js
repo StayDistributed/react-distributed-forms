@@ -27,6 +27,42 @@ describe("Button", () => {
     });
   });
 
+  it("Form onSubmit onFieldFocus onFieldBlur", async () => {
+    let testValues;
+
+    component = create(
+      <Form
+        onSubmit={e => (testValues = e)}
+        onFieldFocus={e => (testValues = e)}
+        onFieldBlur={e => (testValues = e)}
+      >
+        <Button name="submit" />
+      </Form>
+    );
+    tree = component.toJSON();
+
+    await tree.props.onClick({
+      target: { name: tree.props.name }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.name).toBe("submit");
+
+    await tree.props.onFocus({
+      target: { name: tree.props.name }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.name).toBe("submit");
+
+    await tree.props.onBlur({
+      target: { name: tree.props.name }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.name).toBe("submit");
+  });
+
   it("onFocus onClick onBlur", async () => {
     let testValues;
 
