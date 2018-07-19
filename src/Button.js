@@ -9,15 +9,50 @@ class Button extends Component {
     const { name, value, context } = this.props;
 
     return {
-      onClick: e => {
-        context.onSubmit({ name, value });
-      },
-      onFocus: e => {
-        context.onFieldFocus({ name, value });
-      },
-      onBlur: e => {
-        context.onFieldBlur({ name, value });
-      }
+      onClick: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onClick,
+           */
+          if (this.props.onClick) {
+            this.props.onClick(e);
+          }
+
+          context
+            .onSubmit({ name, value })
+            .then(() => resolve())
+            .catch(reject);
+        }),
+
+      onFocus: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onFocus,
+           */
+          if (this.props.onFocus) {
+            this.props.onFocus(e);
+          }
+
+          context
+            .onFieldFocus({ name, value })
+            .then(() => resolve())
+            .catch(reject);
+        }),
+
+      onBlur: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onBlur,
+           */
+          if (this.props.onBlur) {
+            this.props.onBlur(e);
+          }
+
+          context
+            .onFieldBlur({ name, value })
+            .then(() => resolve())
+            .catch(reject);
+        })
     };
   };
 

@@ -6,7 +6,7 @@ import "./index.css";
 
 class Demo extends Component {
   state = {
-    firstname: "George",
+    firstname: "Luke",
     job: {
       developer: 1,
       company: "Google"
@@ -37,7 +37,7 @@ class Demo extends Component {
             <legend>Personal Info</legend>
             <div>
               <label>
-                First Name <Input type="text" name="firstname" />
+                First Name <Input type="text" name="firstname" value="George" />
               </label>
             </div>
             <div>
