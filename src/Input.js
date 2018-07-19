@@ -3,9 +3,7 @@ import PropTypes from "prop-types";
 import Field from "./Field";
 
 class Input extends Component {
-  state = {
-    didchanged: false
-  };
+  didchanged = false;
 
   componentDidMount() {
     const { name, value, context } = this.props;
@@ -16,7 +14,7 @@ class Input extends Component {
   }
 
   didChanged() {
-    return this.state.didchanged;
+    return this.didchanged;
   }
 
   getValue = e =>
@@ -64,38 +62,35 @@ class Input extends Component {
             this.props.onChange(e);
           }
 
-          const value = this.getValue(e);
-          this.setState(
-            {
-              didchanged: true
-            },
-            () => {
-              context
-                .onFieldChange({ name, value })
-                .then(() => {
-                  const onDidChanged = () => {
-                    if (this.didChanged() && this.didChangedOnChange()) {
-                      context
-                        .onFieldDidChanged({ name, value })
-                        .then(() => resolve())
-                        .catch(e => reject());
-                    } else {
-                      resolve();
-                    }
-                  };
+          this.didchanged = true;
 
-                  if (setValues) {
-                    setValues({ [name]: value })
-                      .then(onDidChanged)
-                      .catch(e => reject());
-                  } else {
-                    onDidChanged();
-                  }
-                })
-                .catch(e => reject(e));
-            }
-          );
+          const value = this.getValue(e);
+          context
+            .onFieldChange({ name, value })
+            .then(() => {
+              console.log(name, value);
+              const onDidChanged = () => {
+                if (this.didChanged() && this.didChangedOnChange()) {
+                  context
+                    .onFieldDidChanged({ name, value })
+                    .then(() => resolve())
+                    .catch(reject);
+                } else {
+                  resolve();
+                }
+              };
+
+              if (setValues) {
+                setValues({ [name]: value })
+                  .then(onDidChanged)
+                  .catch(reject);
+              } else {
+                onDidChanged();
+              }
+            })
+            .catch(reject);
         }),
+
       onFocus: e =>
         new Promise((resolve, reject) => {
           /**
@@ -105,19 +100,15 @@ class Input extends Component {
             this.props.onFocus(e);
           }
 
+          this.didchanged = false;
+
           const value = this.getValue(e);
-          this.setState(
-            {
-              didchanged: false
-            },
-            () => {
-              context
-                .onFieldFocus({ name, value })
-                .then(() => resolve())
-                .catch(e => reject(e));
-            }
-          );
+          context
+            .onFieldFocus({ name, value })
+            .then(() => resolve())
+            .catch(reject);
         }),
+
       onBlur: e =>
         new Promise((resolve, reject) => {
           /**
@@ -128,7 +119,6 @@ class Input extends Component {
           }
 
           const value = this.getValue(e);
-
           context
             .onFieldBlur({ name, value })
             .then(() => {
@@ -136,12 +126,12 @@ class Input extends Component {
                 context
                   .onFieldDidChanged({ name, value })
                   .then(() => resolve())
-                  .catch(e => reject(e));
+                  .catch(reject);
               } else {
                 resolve();
               }
             })
-            .catch(e => reject(e));
+            .catch(reject);
         })
     };
   };

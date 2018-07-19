@@ -6,20 +6,26 @@ export default class Form extends Component {
   canPropagate = () => !this.props.stopPropagation;
 
   getContextValue(parentValue, props) {
-    const executeMethod = methodName => (...args) =>
+    const executeMethod = methodName => event =>
       new Promise((resolve, reject) => {
+        let isStopped = false;
+        const stopPropagation = () => (isStopped = true);
+
         if (props[methodName]) {
-          props[methodName](...args);
+          props[methodName]({ ...event, stopPropagation });
         }
 
-        if (!this.canPropagate() || args[0].isStopped) return;
+        if (!this.canPropagate() || isStopped) {
+          resolve();
+          return;
+        }
 
         /**
          * TODO
          * parentValue[methodName] is a Promise
          */
         if (parentValue[methodName]) {
-          parentValue[methodName](...args);
+          parentValue[methodName](event);
         }
 
         resolve();
