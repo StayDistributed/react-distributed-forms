@@ -21,14 +21,15 @@ export default class Form extends Component {
         }
 
         /**
-         * TODO
          * parentValue[methodName] is a Promise
          */
         if (parentValue[methodName]) {
-          parentValue[methodName](event);
+          parentValue[methodName](event)
+            .then(() => resolve())
+            .catch(reject);
+        } else {
+          resolve();
         }
-
-        resolve();
       });
 
     const hasValues = "values" in props;
