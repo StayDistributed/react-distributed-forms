@@ -5,16 +5,6 @@ import Field from "./Field";
 class Select extends Component {
   state = {};
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.value !== state.value) {
-      return {
-        value: state.value
-      };
-    }
-
-    return null;
-  }
-
   getValue = e =>
     this.props.multiple
       ? [].slice.call(e.target.selectedOptions).map(o => o.value)
@@ -30,22 +20,68 @@ class Select extends Component {
 
       ...(hasValue ? { value: values[name] } : null),
 
-      onChange: e => {
-        const value = this.getValue(e);
-        if (setValues) {
-          setValues({ [name]: value });
-        }
-        context.onFieldChange({ name, value });
-        context.onFieldDidChanged({ name, value });
-      },
-      onFocus: e => {
-        const value = this.getValue(e);
-        context.onFieldFocus({ name, value });
-      },
-      onBlur: e => {
-        const value = this.getValue(e);
-        context.onFieldBlur({ name, value });
-      }
+      onChange: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onChange,
+           */
+          if (this.props.onChange) {
+            this.props.onChange(e);
+          }
+
+          const value = this.getValue(e);
+          context
+            .onFieldChange({ name, value })
+            .then(() => {
+              const onDidChanged = () => {
+                context
+                  .onFieldDidChanged({ name, value })
+                  .then(() => resolve())
+                  .catch(reject);
+              };
+
+              if (setValues) {
+                setValues({ [name]: value })
+                  .then(onDidChanged)
+                  .catch(reject);
+              } else {
+                onDidChanged();
+              }
+            })
+            .catch(reject);
+        }),
+
+      onFocus: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onFocus,
+           */
+          if (this.props.onFocus) {
+            this.props.onFocus(e);
+          }
+
+          const value = this.getValue(e);
+          context
+            .onFieldFocus({ name, value })
+            .then(() => resolve())
+            .catch(reject);
+        }),
+
+      onBlur: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onBlur,
+           */
+          if (this.props.onBlur) {
+            this.props.onBlur(e);
+          }
+
+          const value = this.getValue(e);
+          context
+            .onFieldBlur({ name, value })
+            .then(() => resolve())
+            .catch(reject);
+        })
     };
   };
 
