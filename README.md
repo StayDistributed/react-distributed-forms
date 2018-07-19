@@ -11,23 +11,60 @@
 [coveralls-badge]: https://img.shields.io/coveralls/StayDistributed/react-distributed-forms/master.png?style=flat-square
 [coveralls]: https://coveralls.io/github/StayDistributed/react-distributed-forms
 
-Every input is inside a form, _react-distributed-forms_ let you write the html you want and listen to the fields changes from the Form that contains them. HTML is cleaner, changes control is centralized. You can also build awesome _nested forms_ (see below).
+Forms are central in modern web-apps, **react-distributed-forms** let you write them in the easiest way. HTML is cleaner, changes control is centralized.
+
+- No CSS inside, you can use yours!
+- **2-ways data-binding** included
+- You can granularly customize behaviors with context
+- You can put Forms in some files and fields in other files
+- ...without pass props or wiring them.
+- You can simply replace your HTML components
+- It just works!
+
+### Write less, do more
+
+This 20 rows are a Form with data-binding with the state of the Component, that save changes when click on Submit and when user stop editing fields.
+
+```js
+import React from "react";
+import { Form, Input, Selext, Textarea, Button } from "react-distributed-forms";
+
+class Story extends React.Component {
+  state = {};
+
+  saveData() {
+    const formData = this.state; // send formData to backend
+  }
+
+  render() {
+    return (
+      <Form
+        binding={this}
+        onFieldDidChanged={this.saveData}
+        onSubmit={this.saveData}
+      >
+        <Input name="author" />
+        <Input name="private" type="checkbox" />
+        <Textarea name="story" />
+      </Form>
+    );
+  }
+}
+```
+
+Live Demo of this example: [https://codesandbox.io/s/k0n810zymo](https://codesandbox.io/s/k0n810zymo);
 
 ### Live Demo
 
-[Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
+- [Data Binding](https://codesandbox.io/s/4jy3x6xpx4)
+- [Context](https://codesandbox.io/s/7zw28x215q)
+- [Context + Data Binding](https://codesandbox.io/s/km4538r82r)
+- [Full Example](https://codesandbox.io/s/5k30y1x05k)
+- [Issues](https://github.com/StayDistributed/react-distributed-forms/issues)
 
-[Context](https://codesandbox.io/s/7zw28x215q)
+## Install
 
-[Context + Data Binding](https://codesandbox.io/s/km4538r82r)
-
-[Full Example](https://codesandbox.io/s/5k30y1x05k)
-
-[Issues](https://github.com/StayDistributed/react-distributed-forms/issues)
-
-## Installation
-
-Add react-distributed-forms to your project.
+Add **react-distributed-forms** to your project.
 
 ```bash
 npm i react-distributed-forms --save
@@ -49,20 +86,20 @@ Basic `<Input>`
 // <input type="text"></input>
 ```
 
-Listen to `<Input>` changes
+`<Input>` with values
 
 ```js
-<Form onFieldChange={({ name, value }) => {}}>
+<Form values={{ username: "Hero2018" }}>
   <Input name="username" />
 </Form>
 
-// <input type="text" name="username"></input>
+// <input type="text" name="username" value="Hero2018"></input>
 ```
 
-Give `<Input>` values
+`<Input>` with onChange listener
 
 ```js
-<Form values={{ username: "SuperHero" }}>
+<Form onFieldChange={({ name, value }) => {}}>
   <Input name="username" />
 </Form>
 
@@ -89,59 +126,7 @@ Get notified when user remove focus from field, if the field value is changed
 
 ## Data Binding
 
-Usually you spend a lot of time doing this for every field of your form:
-
-```js
-// CLASSIC WAY:
-
-class SomeComponent extends React.Component {
-  state = {
-    first_name: "George",
-    last_name: "Washington"
-    // init all the values to avoid "switching to controlled" warning
-  };
-
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange = e => {
-    // input is type="text"
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-
-    // input is type="checkbox"
-    // ...
-
-    // input is type="radio"
-    // ...
-
-    // input is select
-    // ...
-  };
-
-  render() {
-    return (
-      <form>
-        <input
-          name="first_name"
-          value={this.state.first_name}
-          onChange={this.handleChange}
-        />
-        <input
-          name="last_name"
-          value={this.state.last_name}
-          onChange={this.handleChange}
-        />
-      </form>
-    );
-  }
-}
-```
-
-with _react-distributed-forms_ you can pass a React Component to `<Form>`, this will be used to write every fields'change into the state of the component
+With **react-distributed-forms** you can pass a React Component to `<Form>`, this will be used to write every fields'change into the component state.
 
 This is the simplest scenario, when you bind the state of the component:
 
@@ -161,7 +146,7 @@ class SomeComponent extends React.Component {
 }
 ```
 
-You can also bind Form values to a different key of the state:
+You can also bind Form values to a different key in the state object:
 
 ```js
 class SomeComponent extends React.Component {
