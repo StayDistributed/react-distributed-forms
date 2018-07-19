@@ -2,27 +2,32 @@ import React from "react";
 import expect from "expect";
 import { create } from "react-test-renderer";
 
-import { Form, Input } from "../src/";
+import { Form, Select } from "../src/";
 
-describe("Input", () => {
+describe("Select", () => {
   let tree;
   let component;
 
   it("Props Support", () => {
     tree = create(
       <Form>
-        <Input type="text" name="firstname" />
-        <Input type="password" name="password" />
-        <Input type="email" name="email" />
-        <Input type="number" name="age" value="34" />
+        <Select name="genre">
+          <option>Unknown</option>
+          <option>Male</option>
+          <option>Female</option>
+        </Select>
+        <Select name="country">
+          <option>Italy</option>
+          <option>Germany</option>
+          <option>France</option>
+        </Select>
       </Form>
     ).toJSON();
 
-    expect(tree.length).toBe(4);
+    expect(tree.length).toBe(2);
 
     tree.forEach(child => {
-      expect(child.children).toBeFalsy();
-      expect(child.props.type).toBeA("string");
+      expect(child.children.length).toBe(3);
       expect(child.props.name).toBeA("string");
       expect(child.props.onChange).toBeA("function");
       expect(child.props.onFocus).toBeA("function");
@@ -35,23 +40,25 @@ describe("Input", () => {
 
     tree = create(
       <Form onFieldChange={({ value }) => (testValue = value)}>
-        <Input type="number" name="age" value="34" />
+        <Select name="country" value="Italy">
+          <option>Italy</option>
+          <option>Germany</option>
+          <option>France</option>
+        </Select>
       </Form>
     ).toJSON();
 
-    expect(tree.children).toBeFalsy();
-    expect(tree.props.type).toBeA("string");
     expect(tree.props.name).toBeA("string");
-    expect(tree.props.value).toBe("34");
+    expect(tree.props.value).toBe("Italy");
     expect(tree.props.onChange).toBeA("function");
     expect(tree.props.onFocus).toBeA("function");
     expect(tree.props.onBlur).toBeA("function");
 
     await tree.props.onChange({
-      target: { value: "78" }
+      target: { value: "France" }
     });
 
-    expect(testValue).toBe("78");
+    expect(testValue).toBe("France");
   });
 
   it("onFieldChange", async () => {
@@ -62,7 +69,11 @@ describe("Input", () => {
           testValues = { name, value };
         }}
       >
-        <Input type="text" name="firstname" />
+        <Select name="country">
+          <option>Italy</option>
+          <option>Germany</option>
+          <option>France</option>
+        </Select>
       </Form>
     );
     tree = component.toJSON();
@@ -88,7 +99,11 @@ describe("Input", () => {
           testValues = onFieldChangeValues;
         }}
       >
-        <Input type="text" name="firstname" />
+        <Select name="country">
+          <option>Italy</option>
+          <option>Germany</option>
+          <option>France</option>
+        </Select>
       </Form>
     );
     tree = component.toJSON();

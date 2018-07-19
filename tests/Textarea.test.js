@@ -2,27 +2,24 @@ import React from "react";
 import expect from "expect";
 import { create } from "react-test-renderer";
 
-import { Form, Input } from "../src/";
+import { Form, Textarea } from "../src/";
 
-describe("Input", () => {
+describe("Textarea", () => {
   let tree;
   let component;
 
   it("Props Support", () => {
     tree = create(
       <Form>
-        <Input type="text" name="firstname" />
-        <Input type="password" name="password" />
-        <Input type="email" name="email" />
-        <Input type="number" name="age" value="34" />
+        <Textarea name="title" />
+        <Textarea name="story" />
       </Form>
     ).toJSON();
 
-    expect(tree.length).toBe(4);
+    expect(tree.length).toBe(2);
 
     tree.forEach(child => {
       expect(child.children).toBeFalsy();
-      expect(child.props.type).toBeA("string");
       expect(child.props.name).toBeA("string");
       expect(child.props.onChange).toBeA("function");
       expect(child.props.onFocus).toBeA("function");
@@ -35,23 +32,22 @@ describe("Input", () => {
 
     tree = create(
       <Form onFieldChange={({ value }) => (testValue = value)}>
-        <Input type="number" name="age" value="34" />
+        <Textarea name="bio" value="A short bio" />
       </Form>
     ).toJSON();
 
     expect(tree.children).toBeFalsy();
-    expect(tree.props.type).toBeA("string");
     expect(tree.props.name).toBeA("string");
-    expect(tree.props.value).toBe("34");
+    expect(tree.props.value).toBe("A short bio");
     expect(tree.props.onChange).toBeA("function");
     expect(tree.props.onFocus).toBeA("function");
     expect(tree.props.onBlur).toBeA("function");
 
     await tree.props.onChange({
-      target: { value: "78" }
+      target: { value: "A long long bio..." }
     });
 
-    expect(testValue).toBe("78");
+    expect(testValue).toBe("A long long bio...");
   });
 
   it("onFieldChange", async () => {
@@ -62,7 +58,7 @@ describe("Input", () => {
           testValues = { name, value };
         }}
       >
-        <Input type="text" name="firstname" />
+        <Textarea name="bio" />
       </Form>
     );
     tree = component.toJSON();
@@ -88,7 +84,7 @@ describe("Input", () => {
           testValues = onFieldChangeValues;
         }}
       >
-        <Input type="text" name="firstname" />
+        <Textarea name="bio" />
       </Form>
     );
     tree = component.toJSON();
