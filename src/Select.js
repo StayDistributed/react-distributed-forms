@@ -2,8 +2,26 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
 
-class Select extends Component {
-  state = {};
+export class Select extends Component {
+  componentDidMount() {
+    const { name, value, context } = this.props;
+    const { values, setValues } = context;
+
+    const optionSelected = this.props.children
+      .filter(option => option && option.props && option.props.selected)
+      .map(
+        option =>
+          "value" in option.props ? option.props.value : option.props.children
+      );
+
+    if ((!values || !(name in values)) && setValues) {
+      if ("value" in this.props) {
+        setValues({ [name]: value });
+      } else if (optionSelected.length) {
+        setValues({ [name]: optionSelected });
+      }
+    }
+  }
 
   getValue = e =>
     this.props.multiple
@@ -12,7 +30,7 @@ class Select extends Component {
 
   getProps = () => {
     const { name, value, context, multiple } = this.props;
-    const { values, setValues, initValues } = context || {};
+    const { values, setValues, initValues } = context;
     const hasValue = values && name in values;
 
     return {

@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
 
-class Input extends Component {
+export class Input extends Component {
   didchanged = false;
 
   componentDidMount() {
     const { name, value, context } = this.props;
-    const { values, setValues } = context || {};
+    const { values, setValues } = context;
     if ("value" in this.props && (!values || !(name in values)) && setValues) {
       setValues({ [name]: value });
     }
@@ -31,9 +31,9 @@ class Input extends Component {
 
   didChangedOnBlur = () => !this.didChangedOnChange();
 
-  getProps = () => {
+  getProps() {
     const { name, type, value, context } = this.props;
-    const { values, setValues, initValues } = context || {};
+    const { values, setValues, initValues } = context;
     const hasValue = values && name in values;
 
     return {
@@ -133,7 +133,7 @@ class Input extends Component {
             .catch(reject);
         })
     };
-  };
+  }
 
   render() {
     return <input {...{ ...this.props, context: null }} {...this.getProps()} />;

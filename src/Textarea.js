@@ -2,8 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
 
-class Textarea extends Component {
+export class Textarea extends Component {
   didchanged = false;
+
+  componentDidMount() {
+    const { name, value, context } = this.props;
+    const { values, setValues } = context;
+    if ("value" in this.props && (!values || !(name in values)) && setValues) {
+      setValues({ [name]: value });
+    }
+  }
 
   didChanged() {
     return this.didchanged;
@@ -13,7 +21,7 @@ class Textarea extends Component {
 
   getProps = () => {
     const { name, value, context } = this.props;
-    const { values, setValues, initValues } = context || {};
+    const { values, setValues, initValues } = context;
     const hasValue = values && name in values;
 
     return {

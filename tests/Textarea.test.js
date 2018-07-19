@@ -101,4 +101,47 @@ describe("Textarea", () => {
     expect(testValues.name).toBe(tree.props.name);
     expect(testValues.value).toBe("testValue");
   });
+
+  it("onFocus onChange onBlur", async () => {
+    let testValues;
+
+    component = create(
+      <Form>
+        <Textarea
+          name="bio"
+          onChange={e => (testValues = e)}
+          onFocus={e => (testValues = e)}
+          onBlur={e => (testValues = e)}
+        />
+      </Form>
+    );
+    tree = component.toJSON();
+
+    await tree.props.onChange({
+      target: { name: tree.props.name, value: "testValue" }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.target).toBeTruthy();
+    expect(testValues.target.value).toBeTruthy();
+    expect(testValues.target.value).toBe("testValue");
+
+    await tree.props.onFocus({
+      target: { name: tree.props.name, value: "testValue" }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.target).toBeTruthy();
+    expect(testValues.target.value).toBeTruthy();
+    expect(testValues.target.value).toBe("testValue");
+
+    await tree.props.onBlur({
+      target: { name: tree.props.name, value: "testValue" }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.target).toBeTruthy();
+    expect(testValues.target.value).toBeTruthy();
+    expect(testValues.target.value).toBe("testValue");
+  });
 });
