@@ -68,7 +68,6 @@ class Input extends Component {
           context
             .onFieldChange({ name, value })
             .then(() => {
-              console.log(name, value);
               const onDidChanged = () => {
                 if (this.didChanged() && this.didChangedOnChange()) {
                   context
