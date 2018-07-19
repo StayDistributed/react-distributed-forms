@@ -8,7 +8,7 @@ class Input extends Component {
   componentDidMount() {
     const { name, value, context } = this.props;
     const { values, setValues } = context || {};
-    if ("value" in this.props && !(name in values) && setValues) {
+    if ("value" in this.props && (!values || !(name in values)) && setValues) {
       setValues({ [name]: value });
     }
   }
