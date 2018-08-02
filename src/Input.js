@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
+import getDerivedStateFromProps from "./utils/getDerivedStateFromProps";
 
 export class Input extends Component {
-  didchanged = false;
+  state = {};
+
+  static getDerivedStateFromProps = getDerivedStateFromProps;
 
   componentDidMount() {
     const { name, value, context } = this.props;
@@ -14,7 +17,7 @@ export class Input extends Component {
   }
 
   didChanged() {
-    return this.didchanged;
+    return this.state.didchanged;
   }
 
   getValue = e =>
@@ -32,26 +35,15 @@ export class Input extends Component {
   didChangedOnBlur = () => !this.didChangedOnChange();
 
   getProps() {
-    const { name, type, value, context } = this.props;
-    const { values, setValues, initValues } = context;
-    const hasValue = values && name in values;
+    const { value, name, type, context } = this.props;
+    const { setValues } = context;
 
     return {
-      ...(initValues
-        ? type === "checkbox"
-          ? { checked: value || false }
-          : type === "radio"
-            ? { checked: false }
-            : { value: value || "" }
-        : null),
-
-      ...(hasValue
-        ? type === "checkbox"
-          ? { checked: values[name] ? true : false }
-          : type === "radio"
-            ? { checked: values[name] === value ? true : false }
-            : { value: values[name] }
-        : null),
+      ...(type === "checkbox"
+        ? { checked: this.state.value ? true : false }
+        : type === "radio"
+          ? { checked: this.state.value === value ? true : false }
+          : { value: this.state.value }),
 
       onChange: e =>
         new Promise((resolve, reject) => {
@@ -62,34 +54,40 @@ export class Input extends Component {
             this.props.onChange(e);
           }
 
-          this.didchanged = true;
-
           const value = this.getValue(e);
-          context
-            .onFieldChange({ name, value })
-            .then(() => {
-              const onDidChanged = () => {
-                if (this.didChanged() && this.didChangedOnChange()) {
-                  context
-                    .onFieldDidChanged({ name, value })
-                    .then(() => resolve())
-                    .catch(reject);
-                } else {
-                  resolve();
-                }
-              };
 
-              if (setValues) {
-                setValues({ [name]: value })
-                  .then(onDidChanged)
-                  .catch(reject);
-              } else {
-                onDidChanged();
-              }
-            })
-            .catch(reject);
+          this.setState(
+            () => ({
+              value,
+              didchanged: true
+            }),
+            () => {
+              context
+                .onFieldChange({ name, value })
+                .then(() => {
+                  const onDidChanged = () => {
+                    if (this.didChanged() && this.didChangedOnChange()) {
+                      context
+                        .onFieldDidChanged({ name, value })
+                        .then(() => resolve())
+                        .catch(reject);
+                    } else {
+                      resolve();
+                    }
+                  };
+
+                  if (setValues) {
+                    setValues({ [name]: value })
+                      .then(onDidChanged)
+                      .catch(reject);
+                  } else {
+                    onDidChanged();
+                  }
+                })
+                .catch(reject);
+            }
+          );
         }),
-
       onFocus: e =>
         new Promise((resolve, reject) => {
           /**
@@ -99,15 +97,20 @@ export class Input extends Component {
             this.props.onFocus(e);
           }
 
-          this.didchanged = false;
-
           const value = this.getValue(e);
-          context
-            .onFieldFocus({ name, value })
-            .then(() => resolve())
-            .catch(reject);
-        }),
 
+          this.setState(
+            () => ({
+              didchanged: false
+            }),
+            () => {
+              context
+                .onFieldFocus({ name, value })
+                .then(() => resolve())
+                .catch(reject);
+            }
+          );
+        }),
       onBlur: e =>
         new Promise((resolve, reject) => {
           /**
@@ -118,6 +121,7 @@ export class Input extends Component {
           }
 
           const value = this.getValue(e);
+
           context
             .onFieldBlur({ name, value })
             .then(() => {

@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
+import getDerivedStateFromProps from "./utils/getDerivedStateFromProps";
 
 export class Textarea extends Component {
-  didchanged = false;
+  state = {};
+
+  static getDerivedStateFromProps = getDerivedStateFromProps;
 
   componentDidMount() {
     const { name, value, context } = this.props;
@@ -14,20 +17,17 @@ export class Textarea extends Component {
   }
 
   didChanged() {
-    return this.didchanged;
+    return this.state.didchanged;
   }
 
   getValue = e => e.target.value;
 
-  getProps = () => {
-    const { name, value, context } = this.props;
-    const { values, setValues, initValues } = context;
-    const hasValue = values && name in values;
+  getProps() {
+    const { name, context } = this.props;
+    const { setValues } = context;
 
     return {
-      ...(initValues ? { value: value || "" } : null),
-
-      ...(hasValue ? { value: values[name] } : null),
+      value: this.state.value,
 
       onChange: e =>
         new Promise((resolve, reject) => {
@@ -38,23 +38,29 @@ export class Textarea extends Component {
             this.props.onChange(e);
           }
 
-          this.didchanged = true;
-
           const value = this.getValue(e);
-          context
-            .onFieldChange({ name, value })
-            .then(() => {
-              if (setValues) {
-                setValues({ [name]: value })
-                  .then(() => resolve())
-                  .catch(reject);
-              } else {
-                resolve();
-              }
-            })
-            .catch(reject);
-        }),
 
+          this.setState(
+            () => ({
+              value,
+              didchanged: true
+            }),
+            () => {
+              context
+                .onFieldChange({ name, value })
+                .then(() => {
+                  if (setValues) {
+                    setValues({ [name]: value })
+                      .then(() => resolve())
+                      .catch(reject);
+                  } else {
+                    resolve();
+                  }
+                })
+                .catch(reject);
+            }
+          );
+        }),
       onFocus: e =>
         new Promise((resolve, reject) => {
           /**
@@ -64,15 +70,20 @@ export class Textarea extends Component {
             this.props.onFocus(e);
           }
 
-          this.didchanged = false;
-
           const value = this.getValue(e);
-          context
-            .onFieldFocus({ name, value })
-            .then(() => resolve())
-            .catch(reject);
-        }),
 
+          this.setState(
+            () => ({
+              didchanged: false
+            }),
+            () => {
+              context
+                .onFieldFocus({ name, value })
+                .then(() => resolve())
+                .catch(reject);
+            }
+          );
+        }),
       onBlur: e =>
         new Promise((resolve, reject) => {
           /**
@@ -83,6 +94,7 @@ export class Textarea extends Component {
           }
 
           const value = this.getValue(e);
+
           context
             .onFieldBlur({ name, value })
             .then(() => {
@@ -98,10 +110,12 @@ export class Textarea extends Component {
             .catch(reject);
         })
     };
-  };
+  }
 
   render() {
-    return <textarea {...this.props} {...this.getProps()} />;
+    return (
+      <textarea {...{ ...this.props, context: null }} {...this.getProps()} />
+    );
   }
 }
 

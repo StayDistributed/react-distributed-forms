@@ -1,6 +1,8 @@
-export { default as Form } from "./Form";
-export { default as Field } from "./Field";
-export { default as Input } from "./Input";
-export { default as Select } from "./Select";
-export { default as Button } from "./Button";
-export { default as Textarea } from "./Textarea";
+import Form from "./Form";
+import Field from "./Field";
+import Input from "./Input";
+import Select from "./Select";
+import Button from "./Button";
+import Textarea from "./Textarea";
+
+export { Form, Field, Input, Select, Button, Textarea };

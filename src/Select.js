@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Field from "./Field";
+import getDerivedStateFromProps from "./utils/getDerivedStateFromProps";
 
 export class Select extends Component {
+  state = {};
+
+  static getDerivedStateFromProps = getDerivedStateFromProps;
+
   componentDidMount() {
     const { name, value, context } = this.props;
     const { values, setValues } = context;
@@ -29,14 +34,11 @@ export class Select extends Component {
       : e.target.value;
 
   getProps = () => {
-    const { name, value, context, multiple } = this.props;
-    const { values, setValues, initValues } = context;
-    const hasValue = values && name in values;
+    const { name, context, multiple } = this.props;
+    const { setValues } = context;
 
     return {
-      ...(initValues ? { value: value || (multiple ? [] : "") } : null),
-
-      ...(hasValue ? { value: values[name] } : null),
+      value: this.state.value || (multiple ? [] : ""),
 
       onChange: e =>
         new Promise((resolve, reject) => {
