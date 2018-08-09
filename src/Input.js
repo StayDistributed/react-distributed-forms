@@ -45,6 +45,27 @@ export class Input extends Component {
           ? { checked: this.state.value === value ? true : false }
           : { value: this.state.value }),
 
+      onKeyPress: e =>
+        new Promise((resolve, reject) => {
+          /**
+           * Call external onKeyPress,
+           */
+          if (this.props.onKeyPress) {
+            this.props.onKeyPress(e);
+          }
+
+          const value = this.getValue(e);
+
+          if (e.key === "Enter") {
+            context
+              .onSubmit({ name, value })
+              .then(() => resolve())
+              .catch(reject);
+          } else {
+            resolve();
+          }
+        }),
+
       onChange: e =>
         new Promise((resolve, reject) => {
           /**

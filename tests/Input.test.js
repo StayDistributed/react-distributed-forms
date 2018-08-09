@@ -135,6 +135,36 @@ describe("Input", () => {
     expect(testValue).toBe("78");
   });
 
+  it("onKeyPress", async () => {
+    let testValues;
+    component = create(
+      <Form
+        onSubmit={({ name, value }) => {
+          testValues = { name, value };
+        }}
+      >
+        <Input type="text" name="firstname" />
+      </Form>
+    );
+    tree = component.toJSON();
+
+    await tree.props.onKeyPress({
+      target: { name: tree.props.name, value: "testValue" },
+      key: "Escape"
+    });
+
+    expect(testValues).toBeFalsy();
+
+    await tree.props.onKeyPress({
+      target: { name: tree.props.name, value: "testValue" },
+      key: "Enter"
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.name).toBe(tree.props.name);
+    expect(testValues.value).toBe("testValue");
+  });
+
   it("onFieldChange", async () => {
     let testValues;
     component = create(
