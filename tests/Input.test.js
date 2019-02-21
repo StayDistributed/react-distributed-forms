@@ -137,7 +137,6 @@ describe("Input", () => {
 
   it("onKeyPress", async () => {
     let testValues;
-    let inputTestValue;
 
     component = create(
       <Form
@@ -145,13 +144,7 @@ describe("Input", () => {
           testValues = { name, value };
         }}
       >
-        <Input
-          type="text"
-          name="firstname"
-          onKeyPress={e => {
-            inputTestValue = e.key;
-          }}
-        />
+        <Input type="text" name="firstname" />
       </Form>
     );
     tree = component.toJSON();
@@ -162,7 +155,6 @@ describe("Input", () => {
     });
 
     expect(testValues).toBeFalsy();
-    expect(inputTestValue).toBe("Escape");
 
     await tree.props.onKeyPress({
       target: { name: tree.props.name, value: "testValue" },
@@ -226,7 +218,7 @@ describe("Input", () => {
     expect(testValues.value).toBe("testValue");
   });
 
-  it("onFocus onChange onBlur", async () => {
+  it("onFocus onKeyPress onChange onBlur", async () => {
     let testValues;
 
     component = create(
@@ -234,6 +226,7 @@ describe("Input", () => {
         <Input
           type="text"
           name="firstname"
+          onKeyPress={e => (testValues = e)}
           onChange={e => (testValues = e)}
           onFocus={e => (testValues = e)}
           onBlur={e => (testValues = e)}
@@ -243,6 +236,15 @@ describe("Input", () => {
     tree = component.toJSON();
 
     await tree.props.onChange({
+      target: { name: tree.props.name, value: "testValue" }
+    });
+
+    expect(testValues).toBeTruthy();
+    expect(testValues.target).toBeTruthy();
+    expect(testValues.target.value).toBeTruthy();
+    expect(testValues.target.value).toBe("testValue");
+
+    await tree.props.onKeyPress({
       target: { name: tree.props.name, value: "testValue" }
     });
 
