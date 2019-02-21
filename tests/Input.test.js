@@ -137,13 +137,21 @@ describe("Input", () => {
 
   it("onKeyPress", async () => {
     let testValues;
+    let inputTestValue;
+
     component = create(
       <Form
         onSubmit={({ name, value }) => {
           testValues = { name, value };
         }}
       >
-        <Input type="text" name="firstname" />
+        <Input
+          type="text"
+          name="firstname"
+          onKeyPress={e => {
+            inputTestValue = e.key;
+          }}
+        />
       </Form>
     );
     tree = component.toJSON();
@@ -154,6 +162,7 @@ describe("Input", () => {
     });
 
     expect(testValues).toBeFalsy();
+    expect(inputTestValue).toBe("Escape");
 
     await tree.props.onKeyPress({
       target: { name: tree.props.name, value: "testValue" },
